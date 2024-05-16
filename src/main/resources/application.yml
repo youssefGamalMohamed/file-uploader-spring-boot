@@ -1,3 +1,8 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /file-storage/api/v1
+
 spring:
   application:
     name: file-uploader-spring-boot
