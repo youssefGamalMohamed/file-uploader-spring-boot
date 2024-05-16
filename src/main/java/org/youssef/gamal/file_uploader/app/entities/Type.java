@@ -1,15 +1,17 @@
 package org.youssef.gamal.file_uploader.app.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
-public class File {
+public class Type {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +19,6 @@ public class File {
 
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "file_type_id", referencedColumnName = "id")
-    private Type type;
-
-    @Lob
-    private byte[] data;
-
+    @OneToOne(mappedBy = "type")
+    private File file;
 }
