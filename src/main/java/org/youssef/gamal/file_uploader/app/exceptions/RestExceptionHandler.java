@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,15 @@ public class RestExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
+                .body(errorValidationResponse);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorValidationResponse> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        ErrorValidationResponse errorValidationResponse = ErrorValidationResponse.builder()
+                .validationErrors(Map.of("data", "File too large!"))
+                .build();
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
                 .body(errorValidationResponse);
     }
 }
