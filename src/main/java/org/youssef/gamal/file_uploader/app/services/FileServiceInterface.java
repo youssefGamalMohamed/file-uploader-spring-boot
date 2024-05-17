@@ -1,8 +1,8 @@
 package org.youssef.gamal.file_uploader.app.services;
 
 import org.youssef.gamal.file_uploader.app.entities.File;
-import org.youssef.gamal.file_uploader.app.entities.Type;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FileServiceInterface {
@@ -16,4 +16,6 @@ public interface FileServiceInterface {
     void deleteById(Long id);
 
     Iterable<File> findAll();
+
+    List<File> saveAll(List<File> files);
 }
