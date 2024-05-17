@@ -1,16 +1,17 @@
 package org.youssef.gamal.file_uploader.app.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Type {
 
     @Id
@@ -19,6 +20,7 @@ public class Type {
 
     private String name;
 
-    @OneToOne(mappedBy = "type")
-    private File file;
+    @OneToMany(mappedBy = "type")
+    @JsonManagedReference
+    private List<File> file;
 }
