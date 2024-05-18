@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 public class Type {
 
     @Id
@@ -22,5 +23,6 @@ public class Type {
 
     @OneToMany(mappedBy = "type")
     @JsonManagedReference
+    @ToString.Exclude
     private List<File> file;
 }
