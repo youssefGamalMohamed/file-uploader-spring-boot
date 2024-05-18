@@ -1,8 +1,11 @@
 package org.youssef.gamal.file_uploader.app.services;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import org.youssef.gamal.file_uploader.app.entities.File;
 import org.youssef.gamal.file_uploader.app.entities.Type;
 import org.youssef.gamal.file_uploader.app.repos.FileRepo;
@@ -13,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class FileServiceImpl implements FileServiceInterface {
 
     private final FileRepo fileRepo;
@@ -54,12 +58,19 @@ public class FileServiceImpl implements FileServiceInterface {
 
     @Override
     public List<File> saveAll(List<File> files) {
+        List<Type> supportedTypes = (List<Type>) typeService.findAll();
         for (File file : files) {
-            Optional<Type> type = Optional.of(
-                    typeService.findByTypeName(file.getType().getName())
-                    .orElseThrow()
-            );
-            file.setType(type.get());
+            Type type = supportedTypes.stream()
+                    .filter(t -> t.getName().equals(file.getType().getName()))
+                    .findFirst()
+                    .orElseThrow(() -> new UnsupportedMediaTypeStatusException(
+                            MediaType.parseMediaType(file.getType().getName()),
+                            supportedTypes.stream()
+                                    .map(t -> MediaType.parseMediaType(t.getName()))
+                                    .toList()
+                    ));
+
+            file.setType(type);
         }
         return fileRepo.saveAll(files);
     }
