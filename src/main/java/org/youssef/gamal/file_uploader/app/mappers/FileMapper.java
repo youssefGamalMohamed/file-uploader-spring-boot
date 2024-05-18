@@ -27,7 +27,7 @@ public class FileMapper {
     }
 
 
-    public static List<File> toEntities(MultipartFile[] multipartFiles) throws IOException {
+    public static List<File> toEntities(List<MultipartFile> multipartFiles) throws IOException {
         List<File> list = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             File entity = toEntity(multipartFile);

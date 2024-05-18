@@ -1,6 +1,7 @@
 package org.youssef.gamal.file_uploader.app.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -25,12 +26,11 @@ public class FileController {
 
     private final FileServiceInterface fileService;
 
-    @PostMapping(value = "/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/files")
     public ResponseEntity<List<FileDto>> upload(
-            @RequestParam("files") MultipartFile[] files,
+            @RequestParam("files") List<MultipartFile> files,
             HttpServletRequest httpRequest
     ) throws IOException {
-
 
         List<File> filesList = FileMapper.toEntities(files);
         List<File> savedFiles = fileService.saveAll(filesList);
@@ -50,7 +50,7 @@ public class FileController {
 
 
     @GetMapping("/files/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
+    public ResponseEntity<?> findById(@PathVariable("id") Long id) {
         Optional<File> file = fileService.findById(id);
         FileDto fileDto = FileMapper.toDto(file.get());
 
