@@ -60,17 +60,8 @@ public class FileServiceImpl implements FileServiceInterface {
     public List<File> saveAll(List<File> files) {
         List<Type> supportedTypes = (List<Type>) typeService.findAll();
         for (File file : files) {
-            Type type = supportedTypes.stream()
-                    .filter(t -> t.getName().equals(file.getType().getName()))
-                    .findFirst()
-                    .orElseThrow(() -> new UnsupportedMediaTypeStatusException(
-                            MediaType.parseMediaType(file.getType().getName()),
-                            supportedTypes.stream()
-                                    .map(t -> MediaType.parseMediaType(t.getName()))
-                                    .toList()
-                    ));
-
-            file.setType(type);
+            Optional<Type> type = typeService.findByTypeName(file.getType().getName());
+            file.setType(type.get());
         }
         return fileRepo.saveAll(files);
     }

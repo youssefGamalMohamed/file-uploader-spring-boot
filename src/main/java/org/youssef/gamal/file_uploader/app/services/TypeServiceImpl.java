@@ -1,10 +1,14 @@
 package org.youssef.gamal.file_uploader.app.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import org.youssef.gamal.file_uploader.app.entities.Type;
+import org.youssef.gamal.file_uploader.app.mappers.TypeMapper;
 import org.youssef.gamal.file_uploader.app.repos.TypeRepo;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,9 +45,15 @@ public class TypeServiceImpl implements TypeServiceInterface {
 
     @Override
     public Optional<Type> findByTypeName(String type) {
+        List<Type> supportedTypes = (List<Type>) this.findAll();
         return Optional.of(
                 typeRepo.findByName(type)
-                    .orElseThrow()
+                    .orElseThrow(
+                            () -> new UnsupportedMediaTypeStatusException(
+                                    TypeMapper.toMediaType(type),
+                                    TypeMapper.toMediaTypeList(supportedTypes)
+                            )
+                    )
         );
     }
 
